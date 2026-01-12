@@ -17,12 +17,13 @@ Sistem ini memiliki dua role pengguna dengan hak akses berbeda:
 * **Authentication:** Login aman dengan validasi database.
 * **Dashboard:** Statistik real-time (Total Buku, Total Peminjaman Aktif, Jumlah Anggota).
 * **Manajemen Buku:** Melihat katalog buku dan status stok.
-* **Monitoring:** Memantau status peminjaman dan data anggota.
+* **Manajemen Sirkulasi (NEW):** Memantau status peminjaman dan memiliki hak akses untuk **memproses pengembalian buku secara manual** (Admin Override) apabila anggota tidak melakukan pengembalian mandiri.
+* **Monitoring Anggota:** Melihat daftar data anggota terdaftar.
 
 ### 👤 Member (Anggota)
 * **Katalog Visual:** Browsing buku dengan tampilan Grid & detail gambar.
 * **Peminjaman Mandiri:** Meminjam buku (otomatis mengurangi stok).
-* **History & Pengembalian:** Melihat riwayat pinjam & melakukan pengembalian (otomatis menambah stok).
+* **History & Pengembalian:** Melihat riwayat pinjam & melakukan pengembalian mandiri (otomatis menambah stok).
 * **Validasi:** Tidak bisa meminjam jika stok habis.
 
 ---
@@ -47,30 +48,16 @@ Sistem menggunakan database `db_perpustakaan` dengan 4 tabel utama yang saling b
 3.  **`books`**: Katalog buku (termasuk stok & url gambar).
 4.  **`loans`**: Tabel transaksi peminjaman (mencatat ID Member, ID Buku, Tgl Pinjam, Tgl Kembali).
 
-<img width="353" height="622" alt="Screenshot 2026-01-12 at 1 11 59 PM" src="https://github.com/user-attachments/assets/1d492b32-7fd0-4eb5-80a4-d2226b70b645" />
+<img width="353" height="622" alt="Screenshot ERD" src="https://github.com/user-attachments/assets/1d492b32-7fd0-4eb5-80a4-d2226b70b645" />
 
----
+### Penjelasan Hubungan (Relasi)
+Menggunakan konsep Relational Database dengan relasi **One-to-Many**:
 
-2. Penjelasan Hubungan (Relasi Garis)
-Garis putus-putus dengan simbol wajik (diamond) kecil itu punya arti "One-to-Many".
-
-Members ➔ Loans (One-to-Many)
-
-Baca: "Satu Anggota (members) bisa melakukan BANYAK transaksi peminjaman (loans)."
-
-Logika: Budi (1 orang) bisa meminjam buku hari ini, besok pinjam lagi, minggu depan pinjam lagi. Semua tercatat di loans.
-
-Books ➔ Loans (One-to-Many)
-
-Baca: "Satu Judul Buku (books) bisa muncul di BANYAK riwayat peminjaman (loans)."
-
-Logika: Buku "Harry Potter" bisa dipinjam oleh Budi bulan Januari, lalu dipinjam oleh Siti bulan Februari. Bukunya satu, tapi riwayat peminjamannya banyak.
-
-Users ➔ Loans (One-to-Many)
-
-Baca: "Satu Petugas (users) bisa melayani BANYAK transaksi (loans)."
-
-Logika: Petugas Admin A bisa melayani 100 orang peminjam dalam sehari.
+* **Members ➔ Loans:** Satu Anggota (`members`) bisa melakukan **BANYAK** transaksi peminjaman (`loans`).
+    * *Logika:* Budi bisa meminjam buku hari ini, besok, dan minggu depan. Semua tercatat di tabel history loans.
+* **Books ➔ Loans:** Satu Judul Buku (`books`) bisa muncul di **BANYAK** riwayat peminjaman (`loans`).
+    * *Logika:* Buku "Harry Potter" bisa dipinjam oleh Budi bulan Januari, lalu dipinjam oleh Siti bulan Februari.
+* **Users ➔ Loans:** Satu Petugas (`users`) bisa melayani **BANYAK** transaksi (`loans`).
 
 ---
 
@@ -78,13 +65,13 @@ Logika: Petugas Admin A bisa melayani 100 orang peminjam dalam sehari.
 
 1.  **Clone Repository**
     ```bash
-    git clone (https://github.com/Mypeepee/TA_Jasonchristopher)
+    git clone [https://github.com/Mypeepee/TA_Jasonchristopher](https://github.com/Mypeepee/TA_Jasonchristopher)
     ```
 
 2.  **Setup Database**
     * Buka XAMPP, start Apache & MySQL.
     * Buat database baru bernama `db_perpustakaan`.
-    * Import file `database.sql` (sertakan file sql kamu di repo) ke dalam database tersebut.
+    * Import file `database.sql` (disertakan dalam repo) ke dalam database tersebut.
 
 3.  **Konfigurasi Koneksi**
     * Buka file `src/com/perpustakaan/util/DatabaseConnection.java`.
@@ -105,7 +92,7 @@ Pengujian dilakukan menggunakan **JUnit 5** dan **Black Box Testing** untuk mema
 | UT-02 | Login Invalid | ✅ PASS |
 | UT-03 | Peminjaman (Stok Ada) | ✅ PASS |
 | UT-04 | Peminjaman (Stok Habis) | ✅ PASS |
-| UT-05 | Pengembalian Buku | ✅ PASS |
+| UT-05 | Pengembalian Buku (Member/Admin) | ✅ PASS |
 
 ---
 
@@ -123,14 +110,15 @@ Gunakan akun berikut untuk mencoba aplikasi:
 ## 📸 Screenshots
 
 ### 1. Halaman Login
-<img width="794" height="594" alt="Screenshot 2026-01-12 at 1 06 27 PM" src="https://github.com/user-attachments/assets/36da2ff1-93fa-440d-a84b-aa342f9c0e00" />
+<img width="794" height="594" alt="Login View" src="https://github.com/user-attachments/assets/36da2ff1-93fa-440d-a84b-aa342f9c0e00" />
 
 ### 2. Dashboard Admin
-<img width="1093" height="692" alt="Screenshot 2026-01-12 at 1 06 44 PM" src="https://github.com/user-attachments/assets/a5d63a29-d104-4697-afe2-6f7e61127238" />
+<img width="1093" height="692" alt="Dashboard View" src="https://github.com/user-attachments/assets/a5d63a29-d104-4697-afe2-6f7e61127238" />
 
 ### 3. Katalog & Peminjaman (Member)
-<img width="1427" height="757" alt="Screenshot 2026-01-12 at 1 07 09 PM" src="https://github.com/user-attachments/assets/33f3103e-2056-4f38-b210-8d8c29d8a640" />
+<img width="1427" height="757" alt="Member View" src="https://github.com/user-attachments/assets/33f3103e-2056-4f38-b210-8d8c29d8a640" />
+
 
 ---
 
-**Developed by [jason christopher liendo] - Sistem Informasi Bisnis 2026**
+**Developed by [Jason Christopher Liendo] - Sistem Informasi Bisnis 2026**

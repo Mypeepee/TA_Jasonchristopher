@@ -47,7 +47,30 @@ Sistem menggunakan database `db_perpustakaan` dengan 4 tabel utama yang saling b
 3.  **`books`**: Katalog buku (termasuk stok & url gambar).
 4.  **`loans`**: Tabel transaksi peminjaman (mencatat ID Member, ID Buku, Tgl Pinjam, Tgl Kembali).
 
-> *[Masukkan Screenshot ERD dari DBeaver di sini]*
+<img width="353" height="622" alt="Screenshot 2026-01-12 at 1 11 59 PM" src="https://github.com/user-attachments/assets/1d492b32-7fd0-4eb5-80a4-d2226b70b645" />
+
+---
+
+2. Penjelasan Hubungan (Relasi Garis)
+Garis putus-putus dengan simbol wajik (diamond) kecil itu punya arti "One-to-Many".
+
+Members ➔ Loans (One-to-Many)
+
+Baca: "Satu Anggota (members) bisa melakukan BANYAK transaksi peminjaman (loans)."
+
+Logika: Budi (1 orang) bisa meminjam buku hari ini, besok pinjam lagi, minggu depan pinjam lagi. Semua tercatat di loans.
+
+Books ➔ Loans (One-to-Many)
+
+Baca: "Satu Judul Buku (books) bisa muncul di BANYAK riwayat peminjaman (loans)."
+
+Logika: Buku "Harry Potter" bisa dipinjam oleh Budi bulan Januari, lalu dipinjam oleh Siti bulan Februari. Bukunya satu, tapi riwayat peminjamannya banyak.
+
+Users ➔ Loans (One-to-Many)
+
+Baca: "Satu Petugas (users) bisa melayani BANYAK transaksi (loans)."
+
+Logika: Petugas Admin A bisa melayani 100 orang peminjam dalam sehari.
 
 ---
 

@@ -55,7 +55,7 @@ Sistem menggunakan database `db_perpustakaan` dengan 4 tabel utama yang saling b
 
 1.  **Clone Repository**
     ```bash
-    git clone [https://github.com/username-kamu/nama-repo.git](https://github.com/username-kamu/nama-repo.git)
+    git clone (https://github.com/Mypeepee/TA_Jasonchristopher)
     ```
 
 2.  **Setup Database**
